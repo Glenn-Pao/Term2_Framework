@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "Particle.h"
 #include "Fog.h"
+#include "Player.h"
 #include <vector>
 
 class SceneAssignment : public Scene
@@ -98,7 +99,10 @@ public:
 	void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size=1.0f, float x=0.0f, float y=0.0f);
 	void RenderMesh(Mesh *mesh, bool enableLight, bool enableFog = false);
 	void RenderTerrain();
+	void RenderGUI();
 
+	//update the player's coordinates
+	virtual void UpdatePlayerStatus(const unsigned char key);	
 	virtual void UpdateCameraStatus(const unsigned char key);
 
 
@@ -133,6 +137,7 @@ float height, float hTile, float vTile);
 
 	//Terrain
 	std::vector<unsigned char>m_heightMap;
+	Vector3 TERRAIN_SCALE;
 
 	Camera3 camera;
 
@@ -146,17 +151,10 @@ float height, float hTile, float vTile);
 	bool bLightEnabled;
 
 	float fps;
-
 	bool bFog;
 
-	Vector3 TERRAIN_SCALE;
-
-	float scaleX = 4000.f;
-	float scaleY = 350.f;
-	float scaleZ = 4000.f;
-
-	//for the wall
-	//float translateWall;
+	//Handle to the player class
+	CPlayer* thePlayer;
 };
 
 #endif

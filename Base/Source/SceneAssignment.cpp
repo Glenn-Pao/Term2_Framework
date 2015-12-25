@@ -10,11 +10,17 @@
 #include <sstream>
 
 SceneAssignment::SceneAssignment()
+	: thePlayer(NULL)
 {
 }
 
 SceneAssignment::~SceneAssignment()
 {
+	if (thePlayer)
+	{
+		delete thePlayer;
+		thePlayer = NULL;
+	}
 }
 //Init codes
 void SceneAssignment::ParametersInit()
@@ -199,6 +205,11 @@ void SceneAssignment::Init()
 
 	camera.Init(Vector3(50, 0, 100), Vector3(50, 0, 150), Vector3(0, 1, 0), m_heightMap, TERRAIN_SCALE);
 
+	//initialise player class
+	thePlayer = new CPlayer();
+	//active = true, inital position = inital camera position, scale for hitbox is 5 by 5 by 5
+	thePlayer->Init(true, Vector3(50, 0, 100), Vector3(5, 5, 5));
+
 	for(int i = 0; i < NUM_GEOMETRY; ++i)
 	{
 		meshList[i] = NULL;
@@ -220,7 +231,7 @@ void SceneAssignment::Init()
 }
 const float SceneAssignment::GetHeightMapY(float x, float z)
 {
-	return scaleY*(ReadHeightMap(m_heightMap, x / scaleX, z / scaleZ));
+	return TERRAIN_SCALE.y*(ReadHeightMap(m_heightMap, x / TERRAIN_SCALE.x, z / TERRAIN_SCALE.z));
 }
 Particle* SceneAssignment::FetchParticle()
 {
@@ -266,6 +277,10 @@ void SceneAssignment::UpdateParticle(double dt)
 			go->active = false;
 		}
 	}
+}
+void SceneAssignment::UpdatePlayerStatus(const unsigned char key)
+{
+	thePlayer->UpdateCameraStatus(key, camera);
 }
 void SceneAssignment::UpdateCameraStatus(const unsigned char key)
 {
@@ -317,6 +332,9 @@ void SceneAssignment::Update(double dt)
 	camera.Update(dt);
 
 	UpdateParticle(dt);
+
+	//ensure hitbox position is moving along with player
+	thePlayer->UpdatePosition(dt, camera);
 
 	fps = (float)(1.f / dt);
 }
@@ -497,9 +515,29 @@ void SceneAssignment::RenderTerrain()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -150, 0);
-	modelStack.Scale(scaleX, scaleY, scaleZ); // values varies.
+	modelStack.Scale(TERRAIN_SCALE.x, TERRAIN_SCALE.y, TERRAIN_SCALE.z); // values varies.
 	RenderMesh(meshList[GEO_TERRAIN], false, bFog);
 	modelStack.PopMatrix();
+}
+void SceneAssignment::RenderGUI()
+{
+	//On screen text
+	std::ostringstream ss;
+	ss.precision(3);
+	ss << "FPS: " << fps;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+
+	//On screen text
+	std::ostringstream ss1;
+	ss1.precision(3);
+	ss1 << "PosX: " << thePlayer->GetPositionX();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss1.str(), Color(0, 1, 0), 3, 0, 12);
+
+	//On screen text
+	std::ostringstream ss2;
+	ss2.precision(3);
+	ss2 << "PosZ: " << thePlayer->GetPositionZ();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 10);
 }
 void SceneAssignment::Render()
 {
@@ -567,12 +605,7 @@ void SceneAssignment::Render()
 			RenderParticle(go);
 		}
 	}
-
-	//On screen text
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+	RenderGUI();
 }
 
 void SceneAssignment::Exit()
