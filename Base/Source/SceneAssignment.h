@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "Particle.h"
 #include "Fog.h"
+#include "Physics.h"
 #include "Player.h"
 #include <vector>
 
@@ -114,6 +115,7 @@ public:
 
 	Particle* FetchParticle();
 	void UpdateParticle(double dt);
+	void ToggleFog();
 	void RenderParticle(Particle *particle);
 	
 	//billboard stuff
@@ -155,6 +157,9 @@ float height, float hTile, float vTile);
 
 	//Handle to the player class
 	CPlayer* thePlayer;
+
+	//Physics
+	CPhysics thePhysics;
 };
 
 #endif

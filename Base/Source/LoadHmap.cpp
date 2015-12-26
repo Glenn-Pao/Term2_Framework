@@ -24,16 +24,20 @@ bool LoadHeightMap(const char *file_path, std::vector<unsigned char> &heightMap)
 
 float ReadHeightMap(std::vector<unsigned char> &heightMap, float x, float z)
 {
-	if(x < 0.5f || x > -0.5f || z < 0.5f || z > -0.5f)
+	//If out of bound
+	if (x < -0.5f || x > 0.5f || z < -0.5f || z > 0.5f)
+		return 0;
+	//If heightMap failed to load and is empty
+	if (heightMap.size() == 0)
 		return 0;
 
-	if(heightMap.size() == 0)
-		return 0;
+	//Get Size
+	unsigned rowSize = static_cast<unsigned>((unsigned)sqrt(static_cast<double>(heightMap.size())));
 
-	unsigned terrainSize = (unsigned)sqrt((double)heightMap.size());
+	//Offset by 0.5 after normalize
+	unsigned xCoord = static_cast<unsigned>((x + 0.5f) * rowSize);
+	unsigned zCoord = static_cast<unsigned>((z + 0.5f) * rowSize);
 
-	unsigned zCoord = (unsigned)((z + 0.5f) * terrainSize);
-	unsigned xCoord = (unsigned)((x + 0.5f) * terrainSize);
+	return static_cast<float>(heightMap[zCoord * rowSize + xCoord] / 256.f);
 
-	return (float)heightMap[zCoord * terrainSize + xCoord]/256.f;
 }

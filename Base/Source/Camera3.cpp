@@ -214,7 +214,10 @@ Move the camera forward
 void Camera3::MoveForward(const double dt)
 {
 	Vector3 view = (target - position).Normalized();
-	//view.y = 0;
+	if (sCameraType == LAND_CAM)
+	{
+		view.y = 0;
+	}
 	position += view * CAMERA_SPEED * (float)dt;
 	target += view * CAMERA_SPEED * (float)dt;
 	
@@ -225,7 +228,12 @@ Move the camera backward
 void Camera3::MoveBackward(const double dt)
 {
 	Vector3 view = (target - position).Normalized();
-//	view.y = 0;
+
+	if (sCameraType == LAND_CAM)
+	{
+		view.y = 0;
+	}
+
 	position -= view * CAMERA_SPEED * (float)dt;
 	target -= view * CAMERA_SPEED * (float)dt;
 }

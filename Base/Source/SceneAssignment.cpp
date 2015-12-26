@@ -168,7 +168,7 @@ void SceneAssignment::TerrainInit()
 	meshList[GEO_SKYPLANE]->ArrTexture[1] = LoadTGA("Image//sky.tga");
 
 	meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("GEO_TERRAIN",
-		"Image//map.raw", m_heightMap);
+		"Image//heightmap.raw", m_heightMap);
 	meshList[GEO_TERRAIN]->ArrTexture[0] = LoadTGA("Image//granite_black.tga");
 	meshList[GEO_TERRAIN]->ArrTexture[1] = LoadTGA("Image//granite_light.tga");
 	
@@ -203,12 +203,12 @@ void SceneAssignment::Init()
 
 	TERRAIN_SCALE.Set(4000.f, 150.f, 4000.f);	//set the values for scaling the terrain
 
-	camera.Init(Vector3(50, 0, 100), Vector3(50, 0, 150), Vector3(0, 1, 0), m_heightMap, TERRAIN_SCALE);
+	camera.Init(Vector3(-900, 30, -1120), Vector3(-900, 30, -1130), Vector3(0, 1, 0), m_heightMap, TERRAIN_SCALE);
 
 	//initialise player class
 	thePlayer = new CPlayer();
 	//active = true, inital position = inital camera position, scale for hitbox is 5 by 5 by 5
-	thePlayer->Init(true, Vector3(50, 0, 100), Vector3(5, 5, 5));
+	thePlayer->Init(true, Vector3(-900, 30, -1120), Vector3(5, 5, 5));
 
 	for(int i = 0; i < NUM_GEOMETRY; ++i)
 	{
@@ -286,6 +286,22 @@ void SceneAssignment::UpdateCameraStatus(const unsigned char key)
 {
 	camera.UpdateStatus(key);
 }
+void SceneAssignment::ToggleFog()
+{
+	static bool keyPressed = false;
+	if ( !keyPressed && Application::IsKeyPressed('C'))
+	{
+		keyPressed = true;
+		if (!bFog)
+			bFog = true;
+		else
+			bFog = false;
+	}
+	else if (keyPressed && !Application::IsKeyPressed('C'))
+	{
+		keyPressed = false;
+	}
+}
 void SceneAssignment::Update(double dt)
 {
 	if(Application::IsKeyPressed('1'))
@@ -320,22 +336,14 @@ void SceneAssignment::Update(double dt)
 	{
 		bLightEnabled = false;
 	}
-
-	if(Application::IsKeyPressed('C') && bFog == false)
-	{
-		bFog = true;
-	}
-	if(Application::IsKeyPressed('X') && bFog == true)
-	{
-		bFog = false;
-	}
 	camera.Update(dt);
 
 	UpdateParticle(dt);
+	ToggleFog();			//use this if you want to have fog
 
 	//ensure hitbox position is moving along with player
 	thePlayer->UpdatePosition(dt, camera);
-
+	thePhysics.setPlayerHeight(camera, thePlayer, m_heightMap, TERRAIN_SCALE);
 	fps = (float)(1.f / dt);
 }
 static const float SKYBOXSIZE = 1000.f;
@@ -514,7 +522,7 @@ void SceneAssignment::RenderSkyPlane(Mesh* mesh, Color color, int slices, float
 void SceneAssignment::RenderTerrain()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -150, 0);
+	modelStack.Translate(0, -30, 0);
 	modelStack.Scale(TERRAIN_SCALE.x, TERRAIN_SCALE.y, TERRAIN_SCALE.z); // values varies.
 	RenderMesh(meshList[GEO_TERRAIN], false, bFog);
 	modelStack.PopMatrix();
@@ -532,12 +540,17 @@ void SceneAssignment::RenderGUI()
 	ss1.precision(3);
 	ss1 << "PosX: " << thePlayer->GetPositionX();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss1.str(), Color(0, 1, 0), 3, 0, 12);
-
 	//On screen text
 	std::ostringstream ss2;
 	ss2.precision(3);
-	ss2 << "PosZ: " << thePlayer->GetPositionZ();
+	ss2 << "PosY: " << thePlayer->GetPositionY();
 	RenderTextOnScreen(meshList[GEO_TEXT], ss2.str(), Color(0, 1, 0), 3, 0, 10);
+
+	//On screen text
+	std::ostringstream ss3;
+	ss3.precision(3);
+	ss3 << "PosZ: " << thePlayer->GetPositionZ();
+	RenderTextOnScreen(meshList[GEO_TEXT], ss3.str(), Color(0, 1, 0), 3, 0, 8);
 }
 void SceneAssignment::Render()
 {
