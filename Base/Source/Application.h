@@ -3,6 +3,15 @@
 
 #include "timer.h"
 #include "SceneAssignment.h"
+#include "GameStateManager.h"
+#include "IntroState.h"
+#include "PlayState.h"
+
+// 2 = 2D, 3 = 3D Level
+// If you want more levels
+// you need to change the TOV
+// Example: (2 = 2D, 3 = 3D Level1, 4 = 3D Level2)
+#define TYPE_OF_VIEW 3	
 
 class Application
 {
@@ -30,6 +39,10 @@ private:
 	const static int m_window_deadzone = 100;
 	const static int m_window_width = 800;
 	const static int m_window_height = 600;
+	// Declare the buttons
+	int Button_Left;
+	int Button_Middle;
+	int	Button_Right;
 	//Declare a window object
 	StopWatch m_timer;
 	double m_dElapsedTime;
@@ -37,7 +50,12 @@ private:
 	double m_dAccumulatedTime_ThreadTwo;
 
 	// The handler for the scene
-	SceneAssignment *scene;
+#if TYPE_OF_VIEW == 3
+	SceneAssignment *scene;	// Use this for 3D gameplay
+#else
+	SceneAssignment *scene;	// Use this for 2D gameplay
+#endif
+	CGameStateManager* theGSM;
 };
 
 #endif

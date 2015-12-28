@@ -71,6 +71,12 @@ bool Application::GetMouseUpdate()
 	mouse_last_x = mouse_current_x;
 	mouse_last_y = mouse_current_y;
 
+	Button_Left = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT);
+	Button_Middle = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE);
+	Button_Right = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT);
+
+	theGSM->HandleEvents(mouse_current_x, mouse_current_y, Button_Left, Button_Middle, Button_Right);
+
 	// Get the mouse button status
 	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 		//scene->UpdateWeaponStatus(scene->WA_FIRE);
@@ -80,36 +86,121 @@ bool Application::GetMouseUpdate()
 
 bool Application::GetKeyboardUpdate()
 {
+	
 	if (IsKeyPressed('A'))
 	{
-		scene->UpdateCameraStatus('a');
+		theGSM->HandleEvents('a');
+	}
+	else
+	{
+		theGSM->HandleEvents('a', false);
 	}
 	if (IsKeyPressed('D'))
 	{
-		scene->UpdateCameraStatus('d');
+		theGSM->HandleEvents('d');
+	}
+	else
+	{
+		theGSM->HandleEvents('d', false);
 	}
 	if (IsKeyPressed('W'))
 	{
-		scene->UpdateCameraStatus('w');
+		theGSM->HandleEvents('w');
+	}
+	else
+	{
+		theGSM->HandleEvents('w', false);
 	}
 	if (IsKeyPressed('S'))
 	{
-		scene->UpdateCameraStatus('s');
+		theGSM->HandleEvents('s');
 	}
+	else
+	{
+		theGSM->HandleEvents('s', false);
+	}
+	if (IsKeyPressed('R'))
+	{
+		theGSM->HandleEvents('r');
+	}
+	else
+	{
+		theGSM->HandleEvents('r', false);
+	}
+	if (IsKeyPressed('Q'))
+	{
+		theGSM->HandleEvents('q');
+	}
+	else
+	{
+		theGSM->HandleEvents('q', false);
+	}
+	if (IsKeyPressed('E'))
+	{
+		theGSM->HandleEvents('e');
+	}
+	else
+	{
+		theGSM->HandleEvents('e', false);
+	}
+	// Jump
 	if (IsKeyPressed(32))
 	{
-		scene->UpdateCameraStatus(32);
+		theGSM->HandleEvents(32);
 	}
-    return true;
+	// Pause
+	if (IsKeyPressed(VK_ESCAPE))
+	{
+		theGSM->HandleEvents(VK_ESCAPE);
+	}
+	// Rotate camera
+	if (IsKeyPressed(VK_LEFT))
+	{
+		theGSM->HandleEvents(VK_LEFT);
+	}
+	else
+	{
+		theGSM->HandleEvents(VK_LEFT, false);
+	}
+	if (IsKeyPressed(VK_RIGHT))
+	{
+		theGSM->HandleEvents(VK_RIGHT);
+	}
+	else
+	{
+		theGSM->HandleEvents(VK_RIGHT, false);
+	}
+	if (IsKeyPressed(VK_UP))
+	{
+		theGSM->HandleEvents(VK_UP);
+	}
+	else
+	{
+		theGSM->HandleEvents(VK_UP, false);
+	}
+	if (IsKeyPressed(VK_DOWN))
+	{
+		theGSM->HandleEvents(VK_DOWN);
+	}
+	else
+	{
+		theGSM->HandleEvents(VK_DOWN, false);
+	}
+	return true;
 }
 
 Application::Application()
-	: scene(NULL)
+: scene(NULL), theGSM(NULL)
 {
 }
 
 Application::~Application()
 {
+	if (theGSM)
+	{
+		delete theGSM;
+		theGSM = NULL;
+	}
 }
 
 void Application::Init()
@@ -167,12 +258,23 @@ void Application::Init()
 	m_dElapsedTime = 0.0;
 	m_dAccumulatedTime_ThreadOne = 0.0;
 	m_dAccumulatedTime_ThreadTwo = 0.0;
+
+	// Initialise the GSM
+	theGSM = new CGameStateManager();
+	theGSM->Init("DM224 with Game State Management", 800, 600);
+	theGSM->ChangeState(CPlayState::Instance());
 }
 
 void Application::Run()
 {
 	//Main Loop
+#if TYPE_OF_VIEW == 3
 	scene = new SceneAssignment();
+	//scene = new SceneAssignment(m_window_width, m_window_height);	// Use this for 3D gameplay
+#else
+	scene = new SceneAssignment();
+	//scene = new SceneAssignment(m_window_width, m_window_height);	// Use this for 2D gameplay
+#endif
 	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
@@ -186,7 +288,9 @@ void Application::Run()
 		{
 			GetMouseUpdate();
 			GetKeyboardUpdate();
-			scene->Update(m_dElapsedTime);
+			//scene->Update(m_dElapsedTime);
+			//theGSM->HandleEvents();
+			theGSM->Update(m_dElapsedTime);
 			m_dAccumulatedTime_ThreadOne = 0.0;
 		}
 		if (m_dAccumulatedTime_ThreadTwo > 1.0)
@@ -195,7 +299,8 @@ void Application::Run()
 			m_dAccumulatedTime_ThreadTwo = 0.0;
 		}
 		// Render the scene
-		scene->Render();
+		theGSM->Draw();
+	//	scene->Render();
 		//Swap buffers
 		glfwSwapBuffers(m_window);
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
@@ -203,7 +308,8 @@ void Application::Run()
         m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
 
 	} //Check if the ESC key had been pressed or if the window had been closed
-	scene->Exit();
+	theGSM->Cleanup();
+	//scene->Exit();
 	delete scene;
 }
 

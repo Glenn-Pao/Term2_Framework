@@ -68,6 +68,8 @@ void CMenuState::HandleEvents(CGameStateManager* theGSM, const unsigned char key
 #if GSM_DEBUG_MODE
 
 #endif
+	if (status)
+		menu_scene->UpdateCameraStatus(key);
 }
 
 void CMenuState::HandleEvents(CGameStateManager* theGSM, const double mouse_x, const double mouse_y,
@@ -93,4 +95,5 @@ void CMenuState::Draw(CGameStateManager* theGSM)
 #if GSM_DEBUG_MODE
 	cout << "CMenuState::Draw\n" << endl;
 #endif
+	menu_scene->Render();
 }

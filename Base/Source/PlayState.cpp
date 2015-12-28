@@ -75,6 +75,8 @@ void CPlayState::HandleEvents(CGameStateManager* theGSM, const unsigned char key
 #if GSM_DEBUG_MODE
 	
 #endif
+	if (status)
+		scene->UpdatePlayerStatus(key);
 }
 
 void CPlayState::HandleEvents(CGameStateManager* theGSM, const double mouse_x, const double mouse_y,

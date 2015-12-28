@@ -62,8 +62,10 @@ void CIntroState::HandleEvents(CGameStateManager* theGSM, const unsigned char ke
 {
 #if GSM_DEBUG_MODE
 #endif
-	if (key == 32)
-		theGSM->ChangeState(CMenuState::Instance());
+	if (status)
+		intro_scene->UpdateCameraStatus(key);
+	//if (key == 32)
+		//theGSM->ChangeState(CMenuState::Instance());
 }
 
 void CIntroState::HandleEvents(CGameStateManager* theGSM, const double mouse_x, const double mouse_y,
@@ -89,4 +91,5 @@ void CIntroState::Draw(CGameStateManager* theGSM)
 #if GSM_DEBUG_MODE
 	cout << "CIntroState::Draw\n" << endl;
 #endif
+	intro_scene->Render();
 }
