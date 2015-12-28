@@ -3,6 +3,8 @@
 #include "gamestate.h"
 #include "SceneAssignment.h"
 
+#define TYPE_OF_VIEW 3	// 2 = 2D, 3 = 3D
+
 class CMenuState : public CGameState
 {
 public:
@@ -40,7 +42,11 @@ protected:
 
 private:
 	static CMenuState theMenuState;
-	SceneAssignment *menu_scene;
-
+	// The handler for the scene
+#if TYPE_OF_VIEW == 3
+	SceneAssignment *menu_scene;	// Use this for 3D gameplay
+#else
+	CSceneAssignment2D *menu_scene;	// Use this for 2D gameplay
+#endif
 	CMenuState::MENU_STATE currStateMenu;
 };

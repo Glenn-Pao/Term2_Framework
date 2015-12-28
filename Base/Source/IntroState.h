@@ -2,6 +2,8 @@
 
 #include "gamestate.h"
 
+#define TYPE_OF_VIEW 3	// 2 = 2D, 3 = 3D
+
 class CIntroState : public CGameState
 {
 public:
@@ -29,5 +31,10 @@ protected:
 
 private:
 	static CIntroState theIntroState;
-	SceneAssignment *intro_scene;
+	// The handler for the scene
+#if TYPE_OF_VIEW == 3
+	SceneAssignment *intro_scene;	// Use this for 3D gameplay
+#else
+	CSceneAssignment2D *intro_scene;	// Use this for 2D gameplay
+#endif
 };

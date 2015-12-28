@@ -14,7 +14,11 @@ void CMenuState::Init()
 {
 #if GSM_DEBUG_MODE
 	cout << "CMenuState::Init\n" << endl;
-	menu_scene = new SceneAssignment();
+#endif
+#if TYPE_OF_VIEW == 3
+	menu_scene = new SceneAssignment();	// Use this for 3D gameplay
+#else
+	menu_scene = new CSceneAssignment2D();	// Use this for 2D gameplay
 #endif
 	menu_scene->Init();
 	currStateMenu = STATE_PLAY;
@@ -24,7 +28,11 @@ void CMenuState::Init(const int width, const int height)
 {
 #if GSM_DEBUG_MODE
 	cout << "CMenuState::Init\n" << endl;
-	menu_scene = new SceneAssignment();
+#endif
+#if TYPE_OF_VIEW == 3
+	menu_scene = new SceneAssignment();	// Use this for 3D gameplay
+#else
+	menu_scene = new CSceneAssignment2D();	// Use this for 2D gameplay
 #endif
 	menu_scene->Init();
 	currStateMenu = STATE_PLAY;

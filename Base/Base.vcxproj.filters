@@ -99,6 +99,9 @@
     <ClCompile Include="Source\PlayState.cpp">
       <Filter>Game State Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneAssignment2D.cpp">
+      <Filter>Source Files\Scene Codes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Source\PlayState.h">
       <Filter>Game State Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneAssignment2D.h">
+      <Filter>Header Files\Scene Codes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -83,8 +83,9 @@ class SceneAssignment : public Scene
 	};
 
 public:
-	SceneAssignment();
-	~SceneAssignment();
+	SceneAssignment(void);
+	SceneAssignment(const int m_window_width, const int m_window_height);
+	~SceneAssignment(void);
 
 	virtual void Init();
 	virtual void Update(double dt);

@@ -14,7 +14,12 @@ void CIntroState::Init()
 #if GSM_DEBUG_MODE
 	cout << "CIntroState::Init\n" << endl;
 #endif
-	intro_scene = new SceneAssignment();
+#if TYPE_OF_VIEW == 3
+	intro_scene = new SceneAssignment();	// Use this for 3D gameplay
+#else
+	intro_scene = new CSceneAssignment2D();	// Use this for 2D gameplay
+#endif
+	
 	intro_scene->Init();
 }
 
@@ -23,7 +28,11 @@ void CIntroState::Init(const int width, const int height)
 #if GSM_DEBUG_MODE
 	cout << "CIntroState::Init\n" << endl;
 #endif
-	intro_scene = new SceneAssignment();
+#if TYPE_OF_VIEW == 3
+	intro_scene = new SceneAssignment();	// Use this for 3D gameplay
+#else
+	intro_scene = new CSceneAssignment2D();	// Use this for 2D gameplay
+#endif
 	intro_scene->Init();
 }
 

@@ -18,7 +18,7 @@ void CPlayState::Init()
 #if TYPE_OF_VIEW == 3
 	scene = new SceneAssignment();	// Use this for 3D gameplay
 #else
-	scene = new CSceneManager2D(800, 600);	// Use this for 2D gameplay
+	scene = new CSceneAssignment2D();	// Use this for 2D gameplay
 #endif
 	scene->Init();
 }
@@ -33,7 +33,8 @@ void CPlayState::Init(const int width, const int height)
 #if TYPE_OF_VIEW == 3
 	scene = new SceneAssignment();	// Use this for 3D gameplay
 #else
-	scene = new CSceneManager2D(width, height);	// Use this for 2D gameplay
+	scene = new CSceneAssignment2D();	// Use this for 2D gameplay
+	//scene = new CSceneManager2D(width, height);	// Use this for 2D gameplay
 #endif
 	scene->Init();
 }

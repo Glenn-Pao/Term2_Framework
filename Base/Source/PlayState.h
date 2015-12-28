@@ -2,6 +2,7 @@
 
 #include "GameState.h"
 #include "SceneAssignment.h"
+#include "SceneAssignment2D.h"
 #include "timer.h"
 
 //Include GLEW
@@ -51,6 +52,6 @@ private:
 #if TYPE_OF_VIEW == 3
 	SceneAssignment *scene;	// Use this for 3D gameplay
 #else
-	CSceneManager2D *scene;	// Use this for 2D gameplay
+	CSceneAssignment2D *scene;	// Use this for 2D gameplay
 #endif
 };

@@ -9,12 +9,12 @@
 #include "LoadHmap.h"
 #include <sstream>
 
-SceneAssignment::SceneAssignment()
+SceneAssignment::SceneAssignment(void)
 	: thePlayer(NULL)
 {
 }
 
-SceneAssignment::~SceneAssignment()
+SceneAssignment::~SceneAssignment(void)
 {
 	if (thePlayer)
 	{
@@ -197,7 +197,7 @@ void SceneAssignment::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	m_programID = LoadShaders( "Shader//Fog.vertexshader", "Shader//Fog.fragmentshader" );
+	m_programID = LoadShaders( "Shader//Fog.vertexshader", "Shader//Fog.fragmentshader");
 
 	ParametersInit();
 
@@ -245,6 +245,7 @@ Particle* SceneAssignment::FetchParticle()
 			return go;
 		}
 	}
+	return false;
 }
 void SceneAssignment::UpdateParticle(double dt)
 {

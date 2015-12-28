@@ -27,6 +27,7 @@
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayState.cpp" />
     <ClCompile Include="Source\SceneAssignment.cpp" />
+    <ClCompile Include="Source\SceneAssignment2D.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\GameStateManager.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Source\PlayState.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneAssignment.h" />
+    <ClInclude Include="Source\SceneAssignment2D.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\Utility.h" />
